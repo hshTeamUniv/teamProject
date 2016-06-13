@@ -10,7 +10,7 @@ class Card:
     __level=0
     __image=None
     def getButtonTextFormat(self):
-        cate = self.CategoriesAsArt()[self.getCategoryAsIndex()]
+        cate = self.CategoriesAsArt()[self.category]
         lv = self.getLevelAsString()
         a = lv
         b = cate.rjust( len(cate)+len(lv)+2)
@@ -19,25 +19,8 @@ class Card:
         result += b+"\n\n"
         result+=c
         return result
-    def getConsoleTextFormat(self):
-        cardSideVertical = '|'
-        cardSideHorizontal = '-'
-        cate = self.getCategoryAsString()
-        lv = self.getLevelAsString()
-        line2 = cardSideVertical.ljust(2)+cate.rjust( len(cate)+len(lv)+1)+cardSideVertical.rjust(2)
-        line3 = cardSideVertical.ljust(2) +lv.rjust( len(cate)+len(lv)*2+2)+cardSideVertical.rjust(2)
-        lineVoid = cardSideVertical+"".ljust(len(line3)-2)+cardSideVertical
-        lineTB = cardSideHorizontal*len(line3)
-        line1 = cardSideVertical+lv.ljust(len(line3)-2)+ cardSideVertical
-        lv = self.getLevelAsString()
-        result = lineTB+"\n"
-        result += line1+"\n"
-        result += lineVoid+"\n"
-        result += line2+"\n"
-        result += lineVoid+"\n"
-        result += line3 +"\n"
-        result += lineTB
-        return result
+    def getRawLevel(self):
+        return self.__level
     @staticmethod
     def Categories():
         return Card.__Categories[:]
@@ -83,37 +66,20 @@ class Card:
         return self
     def getRawCategory(self):
         return self.__category
-
-    def getRawLevel(self):
+    @property
+    def category(self):
+        return self.__category
+    @property
+    def level(self):
         return self.__level
-
+    
     def getRawCategoryAsString(self):
         return str(self.getRawCategory())
-
-        
+ 
     def getRawLevelAsString(self):
         return str(self.getRawLevel())
-    @staticmethod
-    def createFromJson(Json):
-        return Card().fromJson(Json)
-
-    def fromJson(self,Json):
-        data = json.loads(Json)
-        self.setCategory(int(data["rawcategory"]))
-        self.setLevel(int(data["rawlevel"]))
-        return self
     
-    def toJson(self):
-        result = {"rawcategory":self.getRawCategoryAsString(),"rawlevel":self.getRawLevelAsString()}
-        result = json.dumps(result)
-        return result
-	
-    def getCategoryAsIndex(self):
-        return self.getRawCategory()
-	
-    def getLevelAsIndex(self):
-        return self.getRawLevel()
-	
+    
     def getCategoryAsString(self):
         return Card.Categories()[self.getCategoryAsIndex()]
 	
